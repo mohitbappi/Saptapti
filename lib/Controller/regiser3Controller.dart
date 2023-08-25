@@ -9,6 +9,7 @@ import '../Model/motherTongueModel.dart';
 class Register3Controller extends GetxController {
   RxBool isLoading = false.obs;
 
+  Moonsign? selectedMoonsign;
   String selectedManglik = '';
   String selectedStar = '';
   String selectedVillage = '';
@@ -20,7 +21,7 @@ class Register3Controller extends GetxController {
   List<String> star = [];
   List<String> manglik = [];
   List<String> village = [];
-
+  List<Moonsign> moonsign = [];
   List<String> horoscope = [
     "Yes",
     "No",
@@ -32,8 +33,36 @@ class Register3Controller extends GetxController {
     await getManglik();
     await getStar();
     await getVillage();
+    await getMoonsign();
     isLoading.value = false;
     super.onInit();
+  }
+
+  getMoonsign() async {
+    isLoading.value = true;
+    moonsign = [];
+    try {
+      var url = Uri.parse(global.baseURL + global.moonsign);
+      var response = await http.get(url);
+      if (response.statusCode == 200 && moonsign.isEmpty) {
+        var data = json.decode(response.body);
+        for (var item in data['response']) {
+          moonsign.add(Moonsign(
+            moonsign_name: item['moonsign_name'],
+            id: int.parse(item['id']),
+            status: item['status'],
+            is_deleted: item['is_deleted'],
+          ));
+        }
+        selectedMoonsign = moonsign[0];
+        isLoading.value = false;
+      } else {
+        print('Failed to fetch religion table');
+      }
+    } catch (e) {
+      isLoading.value = false;
+      print(e.toString());
+    }
   }
 
   getVillage() async {

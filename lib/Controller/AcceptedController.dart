@@ -9,10 +9,10 @@ import 'package:saptapti/util.dart';
 class AcceptedController extends GetxController {
   RxBool isLoading = false.obs;
   List accepted = [].obs;
+  List tabIndex = [true, false, false, false];
 
   @override
   void onInit() async {
-    await getAccepted();
     isLoading.value = false;
     super.onInit();
   }

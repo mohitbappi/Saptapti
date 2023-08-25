@@ -202,9 +202,10 @@ class Register4Controller extends GetxController {
       map['star'] = global.selectedStar;
       map['horoscope'] = global.sselectedHoroscope;
       map['gothra'] = global.gautra;
-      map['moonsign'] = '';
+      map['moonsign'] = global.userMoonsign;
 
-      // var response = await http.post(url, body: map);
+      print('map=== $map');
+
       final request = http.MultipartRequest('POST', url);
       request.headers.addAll({"cookie": "humans_21909=1"});
       if (global.image != null) {

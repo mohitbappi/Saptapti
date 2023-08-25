@@ -202,6 +202,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                       responseData['response']['city']);
                                   await SharedPrefs.saveUserId(
                                       responseData['response']['user_id']);
+                                  await SharedPrefs.saveUserName(
+                                      '${responseData['response']['firstname']} ${responseData['response']['lastname']}');
+                                  await SharedPrefs.saveUserProfile(
+                                      responseData['response']['photo1']);
 
                                   Get.offAll(HomeScreen());
 

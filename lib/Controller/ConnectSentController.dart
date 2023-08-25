@@ -9,10 +9,9 @@ import 'package:saptapti/util.dart';
 class ConnectionSentController extends GetxController {
   RxBool isLoading = false.obs;
   List connect = [].obs;
-  List tabIndex = [true, false, false];
+  List tabIndex = [true, false, false, false];
   @override
   void onInit() {
-    getConnect();
     isLoading.value = false;
     super.onInit();
   }
@@ -31,9 +30,10 @@ class ConnectionSentController extends GetxController {
       if (response.statusCode == 200) {
         connect = [];
         var responseData = json.decode(response.body);
-        isLoading.value = false;
 
         connect.addAll(responseData['response']);
+
+        isLoading.value = false;
       } else {
         return response.body;
       }

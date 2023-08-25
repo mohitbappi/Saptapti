@@ -29,6 +29,20 @@ class City {
       required this.is_deleted});
 }
 
+class Moonsign {
+  final int id;
+  final String moonsign_name;
+  final String status;
+  final String is_deleted;
+
+  Moonsign({
+    required this.id,
+    required this.status,
+    required this.moonsign_name,
+    required this.is_deleted,
+  });
+}
+
 class StateModel {
   final String state_name;
 

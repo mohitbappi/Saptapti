@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:saptapti/Screens/Home/Inbox/viewed_profile.dart';
 import 'package:saptapti/util.dart';
 import 'package:saptapti/color.dart' as color;
 
@@ -8,7 +9,9 @@ import 'connectSent.dart';
 import 'viewedMe.dart';
 
 class Inbox extends StatefulWidget {
-  const Inbox({super.key});
+  const Inbox({super.key, this.index = 0});
+
+  final int index;
 
   @override
   State<Inbox> createState() => _InboxState();
@@ -17,8 +20,8 @@ class Inbox extends StatefulWidget {
 class _InboxState extends State<Inbox> {
   Widget _tabSection() {
     return DefaultTabController(
-      length: 3,
-      initialIndex: 0,
+      length: 4,
+      initialIndex: widget.index,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -32,6 +35,7 @@ class _InboxState extends State<Inbox> {
                   Tab(text: "Connect Received"),
                   Tab(text: "Accepted"),
                   Tab(text: "Connect Sent"),
+                  Tab(text: "Viewed Profile"),
                   // Tab(text: "Viewed Me"),
                 ]),
           ),
@@ -42,6 +46,7 @@ class _InboxState extends State<Inbox> {
               ConnectReceived(),
               Accepted(),
               ConnectSent(),
+              ViewedProfileScreen(),
               // ViewwedMe(),
             ]),
           ),

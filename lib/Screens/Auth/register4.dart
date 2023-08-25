@@ -526,18 +526,16 @@ class _Register4State extends State<Register4> {
                                       InkWell(
                                         onTap: () async {
                                           global.selectEducation = controller
-                                              .selectedEducation!.education_name
+                                              .selectedEducation!.id
                                               .toString();
                                           global.selectedEmployee = controller
                                               .selectedEmployee
                                               .toString();
                                           global.selectedOccupation = controller
-                                              .selectedOccupation!
-                                              .occupation_name
+                                              .selectedOccupation!.id
                                               .toString();
                                           global.seleDesignation = controller
-                                              .selectedDesignation!
-                                              .designation_name
+                                              .selectedDesignation!.id
                                               .toString();
 
                                           global.companyName =

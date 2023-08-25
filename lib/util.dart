@@ -53,9 +53,9 @@ class util {
     );
   }
 
-  Widget simpleButton(width, text, colors) {
+  Widget simpleButton(width, text, colors, [double height = 55]) {
     return Container(
-      height: 55,
+      height: height,
       width: width,
       decoration: BoxDecoration(boxShadow: [
         BoxShadow(

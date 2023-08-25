@@ -81,17 +81,7 @@ class _Register5State extends State<HomeEptyUser> {
                       );
                     },
                     child: const Text(
-                      "Privacy | ",
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: const Text(
-                      "Faq",
+                      "Privacy",
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

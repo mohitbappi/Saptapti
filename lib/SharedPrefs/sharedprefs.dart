@@ -5,9 +5,14 @@ class SharedPrefs {
   static String valueSharedPreferences = '';
 
 // Write DATA
-  static Future<bool> saveUseName(name) async {
+  static Future<bool> saveUserName(name) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return await sharedPreferences.setString('name', name);
+  }
+
+  static Future<bool> saveUserProfile(url) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return await sharedPreferences.setString('profilePhoto', url);
   }
 
   static Future<bool> saveUseMobile(mobile) async {
@@ -85,6 +90,11 @@ class SharedPrefs {
   static Future getUserName() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getString('name');
+  }
+
+  static Future getUserProfile() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString('profilePhoto');
   }
 
   static Future getUserId() async {

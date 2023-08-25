@@ -1,12 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:saptapti/Screens/Auth/contact_us.dart';
 import 'package:saptapti/Screens/Auth/loginSreen.dart';
+import 'package:saptapti/Screens/Home/Inbox/inbox.dart';
 import 'package:saptapti/Screens/Home/homeEmptyUser.dart';
+import 'package:saptapti/Screens/Home/payment.dart';
+import 'package:saptapti/Screens/homeScreen.dart';
 import 'package:saptapti/SharedPrefs/sharedprefs.dart';
 import 'package:saptapti/color.dart' as color;
 import 'package:saptapti/util.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../Controller/userHomeController.dart';
 
@@ -26,6 +33,53 @@ String selectedPrivacy = "Public";
 UserHomeController controller = Get.put(UserHomeController());
 
 class _UserHomeState extends State<UserHome> {
+  String _userName = '';
+  String _userProfilePhoto = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserData();
+  }
+
+  void _getUserData() async {
+    final userName = await SharedPrefs.getUserName();
+    final userProfilePhoto = await SharedPrefs.getUserProfile();
+
+    setState(() {
+      _userName = userName;
+      _userProfilePhoto = userProfilePhoto;
+    });
+  }
+
+  Future pickImage(src) async {
+    try {
+      final image = await ImagePicker().pickImage(source: src);
+      if (image == null) return;
+      final imageTemp = File(image.path);
+
+      await controller.uploadUserProfile(imageTemp);
+      setState(() {
+        _userProfilePhoto = controller.imageUrl;
+      });
+      await SharedPrefs.saveUserProfile(controller.imageUrl);
+    } catch (e) {
+      print('Failed to pick image: $e');
+    }
+  }
+
+  void _onNavigate({int index = 0}) {
+    Navigator.popUntil(context, (route) => route.isFirst);
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (ctx) => HomeScreen(
+          tabIndex: 2,
+          index: index,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -48,26 +102,61 @@ class _UserHomeState extends State<UserHome> {
                           padding: const EdgeInsets.symmetric(vertical: 10.0),
                           child: Column(
                             children: [
-                              CircleAvatar(
-                                radius: 60,
-                                backgroundColor: Colors.white,
-                                backgroundImage: NetworkImage(
-                                    controller.userStatus['imageurl']),
-                                child: Stack(
-                                  children: [
-                                    Positioned(
-                                        child: IconButton(
-                                            onPressed: () {},
-                                            icon: const Icon(
-                                              Icons.edit,
-                                              size: 25,
-                                            )))
-                                  ],
+                              InkWell(
+                                onTap: () {
+                                  Get.defaultDialog(
+                                      title: "image From",
+                                      backgroundColor: color.body,
+                                      titleStyle:
+                                          const TextStyle(color: Colors.white),
+                                      middleTextStyle:
+                                          const TextStyle(color: Colors.white),
+                                      content: Column(
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              pickImage(ImageSource.camera);
+                                              Get.back();
+                                            },
+                                            child: util().simpleButton(200.0,
+                                                "From Camera", color.body1),
+                                          ),
+                                          const SizedBox(
+                                            height: 20,
+                                          ),
+                                          InkWell(
+                                            onTap: () {
+                                              pickImage(ImageSource.gallery);
+                                              Get.back();
+                                            },
+                                            child: util().simpleButton(200.0,
+                                                "From gallery", color.body1),
+                                          ),
+                                        ],
+                                      ));
+                                },
+                                child: CircleAvatar(
+                                  radius: 60,
+                                  backgroundColor: Colors.white,
+                                  backgroundImage: _userProfilePhoto.isEmpty
+                                      ? NetworkImage(
+                                          controller.userStatus['imageurl'])
+                                      : NetworkImage(_userProfilePhoto),
+                                  child: const Stack(
+                                    children: [
+                                      Positioned(
+                                        child: Icon(
+                                          Icons.edit,
+                                          size: 25,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                              const Text(
-                                "User Name",
-                                style: TextStyle(
+                              Text(
+                                _userName,
+                                style: const TextStyle(
                                     color: Colors.white, fontSize: 18),
                               ),
                               Row(
@@ -197,8 +286,17 @@ class _UserHomeState extends State<UserHome> {
                                   ],
                                 ),
                               ),
-                              util().simpleButton(
-                                  200.0, "Go Premium", color.body1),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (ctx) => const PaymentScreen(),
+                                    ),
+                                  );
+                                },
+                                child: util().simpleButton(
+                                    200.0, "Go Premium", color.body1),
+                              ),
                             ],
                           ),
                         ),
@@ -207,20 +305,20 @@ class _UserHomeState extends State<UserHome> {
                           width: MediaQuery.of(context).size.width,
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           color: Colors.black.withOpacity(0.7),
-                          child: const Column(
+                          child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "Connection Sent 2",
+                              const Text(
+                                "Connection Sent",
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold),
                               ),
                               InkWell(
-                                onTap: null,
-                                child: Text(
+                                onTap: () => _onNavigate(index: 2),
+                                child: const Text(
                                   "View More Connect",
                                   style: TextStyle(
                                       decoration: TextDecoration.underline,
@@ -240,20 +338,20 @@ class _UserHomeState extends State<UserHome> {
                           width: MediaQuery.of(context).size.width,
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           color: Colors.black.withOpacity(0.7),
-                          child: const Column(
+                          child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "Viewed My profile (3)",
+                              const Text(
+                                "Viewed My profile",
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold),
                               ),
                               InkWell(
-                                onTap: null,
-                                child: Text(
+                                onTap: () => _onNavigate(index: 3),
+                                child: const Text(
                                   "View More",
                                   style: TextStyle(
                                       decoration: TextDecoration.underline,
@@ -273,20 +371,20 @@ class _UserHomeState extends State<UserHome> {
                           width: MediaQuery.of(context).size.width,
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           color: Colors.black.withOpacity(0.7),
-                          child: const Column(
+                          child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "Viewed My Contact (3)",
+                              const Text(
+                                "Connect Received",
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold),
                               ),
                               InkWell(
-                                onTap: null,
-                                child: Text(
+                                onTap: _onNavigate,
+                                child: const Text(
                                   "View More",
                                   style: TextStyle(
                                       decoration: TextDecoration.underline,
@@ -319,21 +417,31 @@ class _UserHomeState extends State<UserHome> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
-                                  Container(
-                                    child: const Row(
-                                      children: [
-                                        Icon(
-                                          Icons.support_agent,
-                                          color: color.body,
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (ctx) =>
+                                              const ContactUsScreen(),
                                         ),
-                                        Text(
-                                          "Customer Support",
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              color: color.body,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ],
+                                      );
+                                    },
+                                    child: Container(
+                                      child: const Row(
+                                        children: [
+                                          Icon(
+                                            Icons.support_agent,
+                                            color: color.body,
+                                          ),
+                                          Text(
+                                            "Customer Support",
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                color: color.body,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                   InkWell(

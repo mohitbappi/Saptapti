@@ -43,7 +43,7 @@ class registerController extends GetxController {
       global.dob =
           (global.selectedDate.toString() + global.selectedTime.toString());
       // global.selemothertongue = selectedmothertongue!.name.toString();
-      global.seleSubcast = selectedSubcast!.caste_name.toString();
+      global.seleSubcast = selectedSubcast!.subcaste_id.toString();
       Get.to(Register1());
     } else {
       util().showSnackBar(ctx, "Please fill all field", Colors.red);
@@ -63,7 +63,7 @@ class registerController extends GetxController {
     try {
       var url = Uri.parse(global.baseURL + global.moonsign);
       var response = await http.get(url);
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 && moonsign.isEmpty) {
         var data = json.decode(response.body);
         for (var item in data['response']) {
           moonsign.add(item.toString());
@@ -110,7 +110,7 @@ class registerController extends GetxController {
     try {
       var url = Uri.parse(global.baseURL + global.subCast);
       var response = await http.get(url);
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 && subCast.isEmpty) {
         var data = json.decode(response.body);
         for (var item in data['response']) {
           subCast.add(Subcast(

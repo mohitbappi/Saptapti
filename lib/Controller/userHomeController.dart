@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -14,6 +15,8 @@ import '../Screens/Home/home2.dart';
 class UserHomeController extends GetxController {
   RxBool isLoading = false.obs;
   var userStatus;
+  var imageUrl;
+
   @override
   void onInit() {
     userpremiumOrFree();
@@ -72,6 +75,34 @@ class UserHomeController extends GetxController {
       isLoading.value = false;
 
       print(e.toString());
+    }
+  }
+
+  uploadUserProfile(File image) async {
+    isLoading.value = true;
+    try {
+      var url = Uri.parse(global.baseURL + global.uploadProfilePhoto);
+      String uId = await SharedPrefs.getUserId();
+
+      var map = <String, String>{};
+      map['user_id'] = uId;
+
+      final request = http.MultipartRequest('POST', url);
+      request.files.add(
+        await http.MultipartFile.fromPath("p_image", image.path),
+      );
+
+      request.fields.addAll(map);
+
+      final res = await request.send();
+
+      final response = await http.Response.fromStream(res);
+      final responseData = json.decode(response.body);
+
+      imageUrl = responseData['image_url'];
+      isLoading.value = false;
+    } catch (e) {
+      isLoading.value = false;
     }
   }
 }

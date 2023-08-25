@@ -8,7 +8,14 @@ import 'Home/Inbox/inbox.dart';
 import 'Home/notification.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({
+    super.key,
+    this.tabIndex = 0,
+    this.index = 0,
+  });
+
+  final int tabIndex;
+  final int index;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -24,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             child: DefaultTabController(
+              initialIndex: widget.tabIndex,
               length: 4,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -57,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: TabBarView(children: [
                       UserHome(),
                       Matches(),
-                      Inbox(),
+                      Inbox(index: widget.index),
                       // Chat(),
                       NotificationScreen(),
                     ]),

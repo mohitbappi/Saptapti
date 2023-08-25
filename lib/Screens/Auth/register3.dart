@@ -27,6 +27,7 @@ class _Register3State extends State<Register3> {
   @override
   void initState() {
     super.initState();
+    controller.getMoonsign();
   }
 
   bool checkValidation() {
@@ -319,6 +320,43 @@ class _Register3State extends State<Register3> {
                                 ),
                               ),
                               const SizedBox(
+                                height: 10,
+                              ),
+                              util().simpleText("Select moonsign"),
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.9,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: color.body),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton<Moonsign>(
+                                      icon: const Icon(
+                                        Icons.keyboard_arrow_down_sharp,
+                                        size: 30,
+                                      ),
+                                      value: controller.selectedMoonsign,
+                                      onChanged: (Moonsign? val) {
+                                        setState(() {
+                                          controller.selectedMoonsign = val!;
+                                        });
+                                      },
+                                      isExpanded: true,
+                                      items: controller.moonsign
+                                          .map((Moonsign? item) {
+                                        return DropdownMenuItem<Moonsign>(
+                                          value: item,
+                                          child: Text(item!.moonsign_name),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
                                 height: 20,
                               ),
                               util().simpleText("Gothra"),
@@ -339,7 +377,7 @@ class _Register3State extends State<Register3> {
                                       _isError = false;
                                     });
                                     global.faimilyCity =
-                                        controller.selectedCity!.city_name;
+                                        controller.selectedCity!.id.toString();
                                     global.faimilyVillage =
                                         controller.selectedVillage.toString();
                                     global.fatherName = fatherName.text.trim();
@@ -350,7 +388,9 @@ class _Register3State extends State<Register3> {
                                         controller.selectedStar;
                                     global.sselectedHoroscope =
                                         controller.selectedHoroscope;
-
+                                    global.userMoonsign = controller
+                                        .selectedMoonsign!.id
+                                        .toString();
                                     global.gautra = gautra.text.trim();
 
                                     print(global.selectedManglik);

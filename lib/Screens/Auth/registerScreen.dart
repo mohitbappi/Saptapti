@@ -49,10 +49,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Future<void> _selectDate(BuildContext context) async {
+    final now = DateTime.now();
+    final firstDate = DateTime(now.year - 100, now.month, now.day);
     showDatePicker(
             context: context,
             initialDate: DateTime.now(),
-            firstDate: DateTime(2020),
+            firstDate: firstDate,
             lastDate: DateTime.now())
         .then((pickedDate) {
       // Check if no date is selected
@@ -320,9 +322,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 onChanged: (Subcast? subcast) {
                                   setState(() {
                                     controller.selectedSubcast = subcast;
-                                    global.seleSubcast =
-                                        subcast!.caste_name.toString();
-                                    print(global.seleSubcast);
+                                    global.seleSubcast = controller
+                                        .selectedSubcast!.subcaste_id
+                                        .toString();
                                   });
                                 },
                                 isExpanded: true,

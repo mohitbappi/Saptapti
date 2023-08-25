@@ -28,6 +28,9 @@ const String designation = 'get_designtation';
 const String village = 'get_famaliy_village';
 const String register = 'register';
 const String contactUs = 'get_contactus';
+const String uploadProfilePhoto = 'update_image';
+const String viewedProfile = 'viewprofile_list';
+const String profileDetail = 'view_details';
 
 String selemothertongue = '';
 String seleSubcast = '';
@@ -71,6 +74,7 @@ String selectEducation = '';
 String selectedEmployee = '';
 String selectedOccupation = '';
 String userVillage = '';
+String userMoonsign = '';
 
 String selectedDesignation = '';
 

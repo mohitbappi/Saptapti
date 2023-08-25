@@ -1,43 +1,38 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:saptapti/Screens/Home/user_profile.dart';
-import 'package:saptapti/SharedPrefs/sharedprefs.dart';
 import 'package:saptapti/color.dart' as color;
 import 'package:http/http.dart' as http;
+import 'package:saptapti/SharedPrefs/sharedprefs.dart';
+import 'package:saptapti/global.dart' as global;
 
-import '../../../Controller/AcceptedController.dart';
-
-class Accepted extends StatefulWidget {
-  const Accepted({super.key});
+class ViewedProfileScreen extends StatefulWidget {
+  const ViewedProfileScreen({super.key});
 
   @override
-  State<Accepted> createState() => _AcceptedState();
+  State<ViewedProfileScreen> createState() => _ViewedProfileScreenState();
 }
 
-AcceptedController controller = Get.put(AcceptedController());
-
-class _AcceptedState extends State<Accepted> {
+class _ViewedProfileScreenState extends State<ViewedProfileScreen> {
   bool _isLoading = false;
   List<dynamic> data = [];
 
   @override
   void initState() {
     super.initState();
-    getAccepted();
+    _getViewedProfile();
   }
 
-  getAccepted() async {
+  _getViewedProfile() async {
     setState(() {
       _isLoading = true;
     });
-    print('shared=== ${await SharedPrefs.getUserId()}');
     try {
-      var url = Uri.parse("https://kolisaptapadi.in/Api/connect_accepted");
+      var url = Uri.parse(global.baseURL + global.viewedProfile);
 
       String id = await SharedPrefs.getUserId() ?? "";
-      var map = Map<String, dynamic>();
+      var map = <String, dynamic>{};
       map['user_id'] = id;
 
       var response = await http.post(url, body: map);
@@ -59,8 +54,6 @@ class _AcceptedState extends State<Accepted> {
       setState(() {
         _isLoading = false;
       });
-
-      print(e.toString());
     }
     setState(() {
       _isLoading = false;
@@ -96,7 +89,7 @@ class _AcceptedState extends State<Accepted> {
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
                         onTap: () =>
-                            _onNavigateToDetail(data[index]['to_user_id']),
+                            _onNavigateToDetail(data[index]['to_user_vid']),
                         child: Container(
                           height: 300,
                           margin: const EdgeInsets.symmetric(vertical: 20.0),
@@ -112,7 +105,7 @@ class _AcceptedState extends State<Accepted> {
                           child: Stack(
                             children: [
                               Positioned(
-                                bottom: 20,
+                                bottom: 60,
                                 left: 10,
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -122,7 +115,7 @@ class _AcceptedState extends State<Accepted> {
                                           BorderRadius.circular(20.0)),
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
-                                    "accepted Date:  ${data[index]['request_date']}",
+                                    "Request Date:  ${data[index]['request_date']}",
                                     style: TextStyle(
                                         color: color.body,
                                         fontWeight: FontWeight.bold),
@@ -130,7 +123,7 @@ class _AcceptedState extends State<Accepted> {
                                 ),
                               ),
                               Positioned(
-                                bottom: 70,
+                                bottom: 110,
                                 left: 10,
                                 child: Row(
                                   children: [
@@ -152,11 +145,24 @@ class _AcceptedState extends State<Accepted> {
                                     const SizedBox(
                                       width: 10,
                                     ),
+                                    // Container(
+                                    //   decoration: BoxDecoration(
+                                    //       color: Colors.white,
+                                    //       border: Border.all(color: Colors.white),
+                                    //       borderRadius: BorderRadius.circular(20.0)),
+                                    //   padding: const EdgeInsets.all(8.0),
+                                    //   child: const Text(
+                                    //     "Height: 4'11''",
+                                    //     style: TextStyle(
+                                    //         color: color.body,
+                                    //         fontWeight: FontWeight.bold),
+                                    //   ),
+                                    // ),
                                   ],
                                 ),
                               ),
                               Positioned(
-                                bottom: 120,
+                                bottom: 160,
                                 left: 10,
                                 child: Container(
                                   decoration: BoxDecoration(
